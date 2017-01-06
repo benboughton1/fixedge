@@ -17,15 +17,17 @@ Open virtual environment
 
 Install dependencies 
 
-GDAL
-
-(I already had GDAL installed globally when I installed QGIS. More help here - https://gist.github.com/cspanring/5680334)
-
-`pip install gdal --global-option=build_ext --global-option="-I/usr/include/gdal/"`
+You need to install Numpy before GDAL or some GDAL libraries will not be included. 
 
 Numpy & SciPy
 
 `pip install numpy scipy`
+
+GDAL
+
+(More help here - https://gist.github.com/cspanring/5680334)
+
+`pip install gdal --global-option=build_ext --global-option="-I/usr/include/gdal/"`
 
 Deactive virtualenv with `deactivate`
 

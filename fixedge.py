@@ -40,7 +40,7 @@ def remove_outside_cells(data, rep_value, edge_id):
 def fill_cells1(data,reps):
 #       print 'data[4]=',data[4]
         if data[4] == -2.0:
-                print 'fill_cells1 reps',reps
+                #print 'fill_cells1 reps',reps
                 if reps > 10:
                         return max(data)
                 else:
@@ -52,8 +52,8 @@ def fill_cells1(data,reps):
                                         count = count + 1
                                         total = total + i
                         if count < 2:
-                                print 'returning:-2'
-                                print 'count ',count,' total ',total
+                                #print 'returning:-2'
+                                #print 'count ',count,' total ',total
                                 return -2.0
                         else:
                                 #print 'total/count av'
@@ -72,7 +72,7 @@ def fill_cells1(data,reps):
 
 def fill_cells2(data,reps):
 #        print 'data[4]=',data[4]
-        print 'fill_cells2 reps:',reps
+        #print 'fill_cells2 reps:',reps
         if reps > 15:
                 if max(data) < 0:
                         return 0.01
@@ -102,7 +102,7 @@ def fill_cells2(data,reps):
 
 
 def fill1(data,number):
-        print 'min:',scipy.ndimage.minimum(data)
+        #print 'min:',scipy.ndimage.minimum(data)
         #print 'found?:',str(scipy.ndimage.find_objects([-1]))
         reps = 0
         while scipy.ndimage.minimum(data) == number:
@@ -114,7 +114,7 @@ def fill1(data,number):
         return data
 
 def fill2(data,number):
-        print 'min:',scipy.ndimage.minimum(data)
+        #print 'min:',scipy.ndimage.minimum(data)
         #print 'found?:',str(scipy.ndimage.find_objects([-1]))
         reps = 0
         while scipy.ndimage.minimum(data) == number:
