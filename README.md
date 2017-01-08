@@ -1,5 +1,7 @@
 # fixedge
-Fixes paddock edge effect on single band raster data
+Fixes paddock edge effect on single band floating point raster tif data
+
+ndvi.tif is original NDVI and ndvi_fe.tif is after fixegde has run. You will need to view these files in QGIS or similar GIS software. 
 
 Setup virtualenv
 
@@ -30,4 +32,13 @@ GDAL
 `pip install gdal --global-option=build_ext --global-option="-I/usr/include/gdal/"`
 
 Deactive virtualenv with `deactivate`
+
+To get working open python in same directory as fixedge.py and ndvi.tif
+
+Run:
+
+```
+import fixedge
+fixedge.fe('ndvi.tif','ndvi_fe.tif')
+```
 
