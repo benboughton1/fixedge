@@ -1,7 +1,14 @@
 # fixedge
-Fixes paddock edge effect on single band floating point raster tif data
+Fixes paddock edge effect on single band floating point raster tif data.
+
+It removes the outside 3 pixels surround the image and fills them back in using the average of surrounding pixels.
 
 ndvi.tif is original NDVI and ndvi_fe.tif is after fixegde has run. You will need to view these files in QGIS or similar GIS software. 
+
+graphic.jpg is both tif files rendered with colour ramp.
+
+
+Getting it going:
 
 Setup virtualenv
 
