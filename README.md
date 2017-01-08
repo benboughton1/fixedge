@@ -1,11 +1,11 @@
 # fixedge
 Fixes paddock edge effect on single band floating point raster tif data.
 
-It removes the outside 3 pixels surround the image and fills them back in using the average of surrounding pixels.
+It removes the outside 2 pixels that surround the image and fills them back in using the average of surrounding pixels.
 
 ndvi.tif is original NDVI and ndvi_fe.tif is after fixegde has run. You will need to view these files in QGIS or similar GIS software. 
 
-graphic.jpg is both tif files rendered with colour ramp.
+graphic.jpg is both tif files rendered with colour ramp so you can see what it does without QGIS. 
 
 
 Getting it going:
@@ -46,6 +46,9 @@ Run:
 
 ```
 import fixedge
-fixedge.fe('ndvi.tif','ndvi_fe.tif')
+fixedge.fixedge('ndvi.tif','ndvi_fe.tif',0,0)
 ```
+TODO:
 
+1. It is currently hard coded to just removed two lots of outside pixels. It could be rewritten to deal with as many as desired.
+2. It is not extensively tested. A bunch of test cases could be put together. 

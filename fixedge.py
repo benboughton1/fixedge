@@ -7,7 +7,8 @@ from osgeo import gdal
 def make_raster(in_ds, fn, data, data_type, nodata=None):
     """
     Export raster using GDAL.
-    Code borrowed from excellent book 'Geoprocessing with Python' (Manning Publishing) by Chris Garrard
+    Code borrowed from excellent book 'Geoprocessing with Python' 
+    (Manning Publishing) by Chris Garrard
     """
     driver = gdal.GetDriverByName('GTiff')
     out_ds = driver.Create(fn, in_ds.RasterXSize, in_ds.RasterYSize, 1, data_type)
@@ -21,11 +22,12 @@ def make_raster(in_ds, fn, data, data_type, nodata=None):
     out_band.ComputeStatistics(False)
     return out_ds
 
-def remove_outside_cells(data, rep_value, edge_id):
+def remove_outside_cells(data, rep_value, edge_id, nodatain):
     """Removes outside cells of raster"""
-    #Assuming nodata of 0
-    if data[4] == 0:
-        return 0
+    #Skip if cell is no data
+    if data[4] == nodatain:
+        return nodatain
+    #Skip if cell has been assigned as already removed
     elif data[4] == -1:
         return -1
     else:
@@ -94,14 +96,15 @@ def fill_cells2(data, reps):
 def fill1(data, number):
     """
     Fills cells back in 1
-    Runs around 20 times to make sure no cells are left empty
+    Can run up to to 20 times to make sure no cells are left empty
     """
     #print 'min:',scipy.ndimage.minimum(data)
     #print 'found?:',str(scipy.ndimage.find_objects([-1]))
     reps = 0
     while scipy.ndimage.minimum(data) == number:
         if reps < 20:
-            data = scipy.ndimage.filters.generic_filter(data, fill_cells1, size=3, mode='nearest', extra_arguments=(reps,))
+            data = scipy.ndimage.filters.generic_filter(
+                data, fill_cells1, size=3, mode='nearest', extra_arguments=(reps,))
             reps += 1
         else:
             break
@@ -114,14 +117,15 @@ def fill2(data, number):
     reps = 0
     while scipy.ndimage.minimum(data) == number:
         if reps < 20:
-            data = scipy.ndimage.filters.generic_filter(data, fill_cells2, size=3, mode='nearest', extra_arguments=(reps,))
+            data = scipy.ndimage.filters.generic_filter(
+                data, fill_cells2, size=3, mode='nearest', extra_arguments=(reps,))
             reps += 1
         else:
             break
     return data
 
 def change_nodata(data, nodatain, nodataout):
-    """Set nodata value to -9999"""
+    """Set nodata value to whatever"""
     if data[4] == nodatain:
         return nodataout
     else:
@@ -139,16 +143,22 @@ def fixedge(in_, out, nodatain=0, nodataout=0):
     #remove single row of outside cells and replace with -1
     rep_value = -1.0
     edge_id = nodatain
-    data_ = scipy.ndimage.filters.generic_filter(in_data, remove_outside_cells, size=3, mode='nearest', extra_arguments=(rep_value, edge_id))
+    data_ = scipy.ndimage.filters.generic_filter(
+        in_data, remove_outside_cells, size=3, mode='nearest',
+        extra_arguments=(rep_value, edge_id, nodatain))
     #remove second row of outside cells and replace with -2
     rep_value = -2.0
     edge_id = -1
-    data = scipy.ndimage.filters.generic_filter(data_, remove_outside_cells, size=3, mode='nearest', extra_arguments=(rep_value, edge_id))
+    data = scipy.ndimage.filters.generic_filter(
+        data_, remove_outside_cells, size=3, mode='nearest',
+        extra_arguments=(rep_value, edge_id, nodatain))
 
     d1 = fill1(data,-2)
     d2 = fill2(d1,-1)
 
-    d3 = scipy.ndimage.filters.generic_filter(d2, change_nodata, size=3, mode='nearest', extra_arguments=(nodatain,nodataout))
+    d3 = scipy.ndimage.filters.generic_filter(
+        d2, change_nodata, size=3, mode='nearest',
+        extra_arguments=(nodatain, nodataout))
 
     make_raster(in_ds, out, d3, gdal.GDT_Float32, nodata=nodataout)
 
